@@ -1,0 +1,16 @@
+asgi-redis==1.0.0
+asgiref==1.0.0
+attrs==16.3.0
+autobahn==0.17.1
+Automat==0.5.0
+channels==1.0.3
+constantly==15.1.0
+daphne==1.0.3
+Django==1.10.5
+incremental==16.10.1
+msgpack-python==0.4.8
+redis==2.10.5
+six==1.10.0
+Twisted==17.1.0
+txaio==2.6.1
+zope.interface==4.3.3

@@ -1,0 +1,44 @@
+{% extends 'example/_base.html' %}
+
+{% block content %}
+  <a href="{% url 'example:log_out' %}">Log out</a>
+  <br>
+  <ul>
+    {% for user in users %}
+      <!-- NOTE: We escape HTML to prevent XSS attacks. -->
+      <li data-username="{{ user.username|escape }}">
+        {{ user.username|escape }}: {{ user.status|default:'Offline' }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock content %}
+
+{% block script %}
+  <script>
+    var socket = new WebSocket('ws://' + window.location.host + '/users/');
+
+    socket.onopen = function open() {
+      console.log('WebSockets connection created.');
+    };
+
+    socket.onmessage = function message(event) {
+      var data = JSON.parse(event.data);
+      // NOTE: We escape JavaScript to prevent XSS attacks.
+      var username = encodeURI(data['username']);
+      var user = $('li').filter(function () {
+        return $(this).data('username') == username;
+      });
+
+      if (data['is_logged_in']) {
+        user.html(username + ': Online');
+      }
+      else {
+        user.html(username + ': Offline');
+      }
+    };
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.onopen();
+    }
+  </script>
+{% endblock script %}
